@@ -3,7 +3,7 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![GitHub forks](https://img.shields.io/github/forks/yuvrajshrirame/osc-contributions-diy?style=social)
 ![GitHub stars](https://img.shields.io/github/stars/yuvrajshrirame/osc-contributions-diy?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yuvrajshrirame/osc-contributions-diy)
+![GitHub issues](https://img.shields.io/github/issues/yuvrajshrirame/osc-contributions-diy?color=red)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 > A beginner-friendly open source project where you can make your **first GitHub contribution** — no experience needed!
