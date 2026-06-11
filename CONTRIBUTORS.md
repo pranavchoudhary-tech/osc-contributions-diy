@@ -4,4 +4,4 @@ Thank you to everyone who has contributed to this project!
 
 | Name | GitHub Profile | Country |
 |------|----------------|---------|
-| Your Name (maintainer) | [@yourusername](https://github.com/yourusername) | India |
+| Raj  rajwagh11 | [@yourusername](https://github.com/rajwagh11) | India |
