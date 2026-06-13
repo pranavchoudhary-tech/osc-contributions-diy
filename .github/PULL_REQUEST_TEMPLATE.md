@@ -1,8 +1,11 @@
 ## What did you change?
 <!-- Describe your changes clearly -->
 
-## Which issue does this fix?
-Closes #<!-- issue number here -->
+## Which issue does this relate to?
+Related to #<!-- 
+  ⚠️ Use "Related to" NOT "Closes" for recurring issues like
+  adding your name or fun facts — those should stay open for everyone!
+-->
 
 ## Type of change
 - [ ] Bug fix
