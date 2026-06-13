@@ -1,0 +1,51 @@
+name: Auto Merge Beginner PRs
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: Enable auto-merge
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Only auto-merge if PR touches allowed files
+            const files = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const allowedFiles = ['CONTRIBUTORS.md', 'FUN_FACTS.md', 'README.md'];
+            const changedFiles = files.data.map(f => f.filename);
+            const isSafe = changedFiles.every(f => allowedFiles.includes(f));
+
+            if (isSafe) {
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                event: 'APPROVE'
+              });
+
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                merge_method: 'squash'
+              });
+
+              console.log(`✅ Auto-merged PR #${pr.number}`);
+            } else {
+              console.log(`⏭️ Skipped PR #${pr.number} — touches non-allowed files, needs manual review`);
+            }
