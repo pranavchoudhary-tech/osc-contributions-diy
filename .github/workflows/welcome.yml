@@ -9,15 +9,50 @@ on:
 jobs:
   welcome:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
-      - uses: actions/first-interaction@v1
+      - name: Welcome new contributors
+        uses: actions/github-script@v7
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
-            👋 Hey there! Thanks for opening your first issue here.
-            A maintainer will look into this soon.
-            While you wait, check out our [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) to get started with contributing!
-          pr-message: |
-            🎉 Congrats on your first Pull Request!
-            Thanks for contributing — a maintainer will review it shortly.
-            Make sure you've gone through the checklist in the PR template. Good luck! 🚀
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { context, github } = { context: context, github: github };
+            const sender = context.payload.sender.login;
+            const isPR = context.eventName === 'pull_request_target';
+
+            // Check if this is their first PR or Issue
+            const query = isPR
+              ? github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'all'
+                })
+              : github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'all',
+                  creator: sender
+                });
+
+            const result = await query;
+            const items = result.data.filter(i => i.user.login === sender);
+
+            if (items.length === 1) {
+              if (isPR) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  body: `🎉 Hey @${sender}! Congrats on your **first Pull Request** here!\n\nA maintainer will review it shortly. While you wait:\n- ✅ Make sure you followed the steps in [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md)\n- ✅ Check your PR description is filled in\n\nThanks for contributing! 🚀`
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.issue.number,
+                  body: `👋 Hey @${sender}! Thanks for opening your first issue here!\n\nA maintainer will look into this soon.\n\nMeanwhile, check out our [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) to get started with contributing! 🌱`
+                });
+              }
+            }
