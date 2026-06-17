@@ -30,7 +30,7 @@ This creates a copy of this repo in your own GitHub account.
 ### Step 2 — Clone your fork
 Open your terminal and run:
 ```bash
-git clone https://github.com/yuvrajshrirame/osc-contributions-diy.git
+git clone https://github.com/<your-username>/osc-contributions-diy.git
 cd osc-contributions-diy
 ```
 
